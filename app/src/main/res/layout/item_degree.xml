@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <!-- Show as background -->
+    <!-- http://stackoverflow.com/questions/20928748/using-imageview-as-background-for-an-android-layout -->
+    <ImageView
+            style="@style/BackGroundImageView"
+            android:id="@+id/image"
+            android:scaleType="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    <TextView
+            android:id="@+id/name"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:ellipsize="end"
+            android:maxLines="4"/>
+
+</LinearLayout>
