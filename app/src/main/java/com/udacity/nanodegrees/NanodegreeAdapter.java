@@ -1,20 +1,21 @@
 package com.udacity.nanodegrees;
 
-import com.squareup.picasso.Picasso;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 public class NanodegreeAdapter extends ArrayAdapter<NanoDegree> {
+
+    private Context mContext;
+
     public NanodegreeAdapter(Context context, List<NanoDegree> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
+        mContext = context;
     }
 
     @Override
@@ -26,7 +27,7 @@ public class NanodegreeAdapter extends ArrayAdapter<NanoDegree> {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_degree, parent, false);
             viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.image = (ImageView) convertView.findViewById(R.id.image);
+            viewHolder.image = (DynamicHeightNetworkImageView) convertView.findViewById(R.id.image);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -35,13 +36,17 @@ public class NanodegreeAdapter extends ArrayAdapter<NanoDegree> {
         viewHolder.name.setText(degree.getName());
         String imageString = degree.getImage();
         if (imageString != null)
-            Picasso.with(getContext()).load(degree.getImage()).resize(600, 600).into(viewHolder.image);
+            // Picasso.with(getContext()).load(degree.getImage()).into(viewHolder.image);
+        viewHolder.image.setImageUrl(imageString,
+                ImageLoaderHelper.getInstance(mContext).getImageLoader());
+
+
 
         return convertView;
     }
 
     private static class ViewHolder {
         TextView name;
-        ImageView image;
+        DynamicHeightNetworkImageView image;
     }
 }
