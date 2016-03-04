@@ -13,7 +13,7 @@
 
     <TextView
             android:id="@+id/name"
-            style="@style/TextAppearance.AppCompat.Headline"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"

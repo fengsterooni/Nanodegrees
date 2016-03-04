@@ -1,5 +1,6 @@
 package com.udacity.nanodegrees;
 
+import com.etsy.android.grid.StaggeredGridView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -8,7 +9,6 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         degrees = new ArrayList<>();
         aDegrees = new NanodegreeAdapter(this, degrees);
 
-        ListView lvDegrees = (ListView) findViewById(R.id.lvDegrees);
+        StaggeredGridView lvDegrees = (StaggeredGridView) findViewById(R.id.lvDegrees);
         lvDegrees.setAdapter(aDegrees);
 
         fetchDegrees();
