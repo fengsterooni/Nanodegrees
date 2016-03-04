@@ -1,6 +1,5 @@
 package com.udacity.nanodegrees;
 
-import com.etsy.android.grid.StaggeredGridView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -9,9 +8,14 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,16 +23,26 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<NanoDegree> degrees;
     private NanodegreeAdapter aDegrees;
 
+    @Bind(R.id.lvDegrees)
+    RecyclerView mRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        degrees = new ArrayList<>();
-        aDegrees = new NanodegreeAdapter(this, degrees);
+        ButterKnife.bind(this);
 
-        StaggeredGridView lvDegrees = (StaggeredGridView) findViewById(R.id.lvDegrees);
-        lvDegrees.setAdapter(aDegrees);
+        degrees = new ArrayList<>();
+        aDegrees = new NanodegreeAdapter(degrees);
+
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        StaggeredGridLayoutManager sglm =
+                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+
+        mRecyclerView.setLayoutManager(sglm);
+
+        mRecyclerView.setAdapter(aDegrees);
 
         fetchDegrees();
     }
@@ -45,7 +59,13 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     degreesJSON = response.getJSONArray("degrees");
                     degrees.clear();
-                    aDegrees.addAll(NanoDegree.fromJSONArray(degreesJSON));
+                    List<NanoDegree> list = NanoDegree.fromJSONArray(degreesJSON);
+                    for (NanoDegree degree : list) {
+                        degrees.add(degree);
+                    }
+
+                    aDegrees.notifyDataSetChanged();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
