@@ -8,27 +8,36 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ListView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<NanoDegree> degrees;
     private NanodegreeAdapter aDegrees;
+    @Bind(R.id.lvDegrees)
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        degrees = new ArrayList<>();
-        aDegrees = new NanodegreeAdapter(this, degrees);
+        ButterKnife.bind(this);
 
-        ListView lvDegrees = (ListView) findViewById(R.id.lvDegrees);
-        lvDegrees.setAdapter(aDegrees);
+        degrees = new ArrayList<>();
+        aDegrees = new NanodegreeAdapter(degrees);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(aDegrees);
 
         fetchDegrees();
     }
@@ -45,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     degreesJSON = response.getJSONArray("degrees");
                     degrees.clear();
-                    aDegrees.addAll(NanoDegree.fromJSONArray(degreesJSON));
+                    // aDegrees.addAll(NanoDegree.fromJSONArray(degreesJSON));
+                    degrees = NanoDegree.fromJSONArray(degreesJSON);
+                    aDegrees.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
