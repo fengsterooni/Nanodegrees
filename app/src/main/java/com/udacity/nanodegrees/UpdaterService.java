@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.text.format.Time;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ public class UpdaterService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Time time = new Time();
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -44,7 +42,6 @@ public class UpdaterService extends IntentService {
             return;
         }
 
-        // Don't even inspect the intent, we only do one thing, and that's fetch content.
         final ArrayList<ContentProviderOperation> cpo = new ArrayList<ContentProviderOperation>();
 
         final Uri degreeUri = DegreeContract.DegreeEntry.buildDegreeUri();

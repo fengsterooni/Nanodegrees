@@ -1,6 +1,9 @@
 package com.udacity.nanodegrees;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -11,6 +14,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,6 +38,19 @@ public class MainActivity extends AppCompatActivity
 
         getSupportLoaderManager().initLoader(0, null, this);
         startService(new Intent(this, UpdaterService.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(mDegreeReceiver,
+                new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mDegreeReceiver);
     }
 
     @Override
@@ -104,4 +121,15 @@ public class MainActivity extends AppCompatActivity
             ButterKnife.bind(this, view);
         }
     }
+
+    private BroadcastReceiver mDegreeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                // updateRefreshingUI();
+                Toast.makeText(MainActivity.this, "Done", Toast.LENGTH_LONG).show();
+
+            }
+        }
+    };
 }
