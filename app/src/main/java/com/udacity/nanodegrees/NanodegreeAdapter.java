@@ -34,35 +34,6 @@ public class NanodegreeAdapter extends RecyclerView.Adapter<NanodegreeAdapter.Vi
         this.mDegrees = nanoDegrees;
     }
 
-    /*
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-        final NanoDegree degree = getItem(position);
-
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_degree, parent, false);
-            viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.image = (DynamicHeightNetworkImageView) convertView.findViewById(R.id.image);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        viewHolder.name.setText(degree.getName());
-        String imageString = degree.getImage();
-        if (imageString != null)
-            // Picasso.with(getContext()).load(degree.getImage()).into(viewHolder.image);
-        viewHolder.image.setImageUrl(imageString,
-                ImageLoaderHelper.getInstance(mContext).getImageLoader());
-
-
-
-        return convertView;
-    }
-    */
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
