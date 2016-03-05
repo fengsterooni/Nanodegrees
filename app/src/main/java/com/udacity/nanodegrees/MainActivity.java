@@ -1,24 +1,29 @@
 package com.udacity.nanodegrees;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private ArrayList<NanoDegree> degrees;
     private NanodegreeAdapter aDegrees;
@@ -44,40 +49,100 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(aDegrees);
 
-        fetchDegrees();
+        getSupportLoaderManager().initLoader(0, null, this);
+        startService(new Intent(this, UpdaterService.class));
     }
 
-    private void fetchDegrees() {
-        String degreeString = "https://www.udacity.com/public-api/v0/courses?projection=internal";
-        AsyncHttpClient client = new AsyncHttpClient();
-
-        client.get(degreeString, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray degreesJSON = null;
-
-                try {
-                    degreesJSON = response.getJSONArray("degrees");
-                    degrees.clear();
-                    List<NanoDegree> list = NanoDegree.fromJSONArray(degreesJSON);
-                    for (NanoDegree degree : list) {
-                        degrees.add(degree);
-                    }
-
-                    aDegrees.notifyDataSetChanged();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
-            }
-        });
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(mDegreeReceiver,
+                new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mDegreeReceiver);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return DegreeLoader.newAllArticlesInstance(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Adapter adapter = new Adapter(data);
+        mRecyclerView.setAdapter(adapter);
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        StaggeredGridLayoutManager sglm =
+                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(sglm);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mRecyclerView.setAdapter(null);
+    }
+
+
+    private class Adapter extends RecyclerView.Adapter<ViewHolder> {
+        private Cursor mCursor;
+
+        public Adapter(Cursor cursor) {
+            mCursor = cursor;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            mCursor.moveToPosition(position);
+            return mCursor.getLong(DegreeLoader.Query._ID);
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = getLayoutInflater().inflate(R.layout.item_degree, parent, false);
+
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            mCursor.moveToPosition(position);
+            holder.name.setText(mCursor.getString(DegreeLoader.Query.NAME));
+
+            holder.image.setImageUrl(
+                    mCursor.getString(DegreeLoader.Query.IMAGE),
+                    ImageLoaderHelper.getInstance(MainActivity.this).getImageLoader());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mCursor.getCount();
+        }
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.name)
+        public TextView name;
+        @Bind(R.id.image)
+        public DynamicHeightNetworkImageView image;
+
+        public ViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
+
+    private BroadcastReceiver mDegreeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
+                // updateRefreshingUI();
+                Toast.makeText(MainActivity.this, "Done", Toast.LENGTH_LONG).show();
+
+            }
+        }
+    };
 }

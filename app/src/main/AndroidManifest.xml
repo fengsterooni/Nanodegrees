@@ -3,6 +3,9 @@
           package="com.udacity.nanodegrees">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
             android:allowBackup="true"
@@ -17,6 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <service android:name=".UpdaterService"
+                 android:exported="false" />
+
+        <provider android:name=".DegreeProvider"
+                  android:authorities="com.udacity.nanodegrees"
+                  android:exported="false" />
     </application>
 
 </manifest>

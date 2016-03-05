@@ -4,9 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class NanoDegree {
+public class NanoDegree implements Parcelable {
     private String name;
     private String image;
 
@@ -54,4 +57,30 @@ public class NanoDegree {
 
         return result;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.image);
+    }
+
+    protected NanoDegree(Parcel in) {
+        this.name = in.readString();
+        this.image = in.readString();
+    }
+
+    public static final Parcelable.Creator<NanoDegree> CREATOR = new Parcelable.Creator<NanoDegree>() {
+        public NanoDegree createFromParcel(Parcel source) {
+            return new NanoDegree(source);
+        }
+
+        public NanoDegree[] newArray(int size) {
+            return new NanoDegree[size];
+        }
+    };
 }
