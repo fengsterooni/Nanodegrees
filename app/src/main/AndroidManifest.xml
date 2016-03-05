@@ -21,10 +21,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".UpdaterService"
+        <service android:name=".service.UpdaterService"
                  android:exported="false" />
 
-        <provider android:name=".DegreeProvider"
+        <provider android:name=".data.DegreeProvider"
                   android:authorities="com.udacity.nanodegrees"
                   android:exported="false" />
     </application>
