@@ -1,4 +1,4 @@
-package com.udacity.nanodegrees;
+package com.udacity.nanodegrees.util;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;

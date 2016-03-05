@@ -1,4 +1,4 @@
-package com.udacity.nanodegrees;
+package com.udacity.nanodegrees.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

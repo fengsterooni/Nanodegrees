@@ -1,4 +1,4 @@
-package com.udacity.nanodegrees;
+package com.udacity.nanodegrees.data;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -10,8 +10,6 @@ public class DegreeContract {
 	public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
 	public static final String PATH_DEGREE = "degrees";
-
-	//public static final String DEFAULT_SORT = PUBLISHED_DATE + " DESC";
 
 	public static final class DegreeEntry implements BaseColumns {
 		public static final Uri CONTENT_URI =

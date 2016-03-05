@@ -1,4 +1,4 @@
-package com.udacity.nanodegrees;
+package com.udacity.nanodegrees.model;
 
 import org.json.JSONArray;
 import org.json.JSONException;

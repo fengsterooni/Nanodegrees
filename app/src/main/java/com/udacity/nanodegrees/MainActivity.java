@@ -1,11 +1,18 @@
 package com.udacity.nanodegrees;
 
+import com.udacity.nanodegrees.data.DegreeLoader;
+import com.udacity.nanodegrees.model.NanoDegree;
+import com.udacity.nanodegrees.service.UpdaterService;
+import com.udacity.nanodegrees.util.ImageLoaderHelper;
+import com.udacity.nanodegrees.util.NetworkUtils;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -46,11 +53,13 @@ public class MainActivity extends AppCompatActivity
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(sglm);
-
         mRecyclerView.setAdapter(aDegrees);
 
         getSupportLoaderManager().initLoader(0, null, this);
-        startService(new Intent(this, UpdaterService.class));
+        if (NetworkUtils.isNetworkAvailable(this))
+            startService(new Intent(this, UpdaterService.class));
+        else
+            Snackbar.make(mRecyclerView, "Check your network connection", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

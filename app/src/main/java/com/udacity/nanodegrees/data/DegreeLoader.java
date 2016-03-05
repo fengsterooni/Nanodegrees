@@ -1,4 +1,4 @@
-package com.udacity.nanodegrees;
+package com.udacity.nanodegrees.data;
 
 import android.content.Context;
 import android.net.Uri;

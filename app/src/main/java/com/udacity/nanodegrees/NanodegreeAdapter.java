@@ -1,5 +1,8 @@
 package com.udacity.nanodegrees;
 
+import com.udacity.nanodegrees.model.NanoDegree;
+import com.udacity.nanodegrees.util.ImageLoaderHelper;
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

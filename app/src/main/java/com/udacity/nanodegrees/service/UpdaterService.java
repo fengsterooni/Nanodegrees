@@ -1,7 +1,9 @@
-package com.udacity.nanodegrees;
+package com.udacity.nanodegrees.service;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.udacity.nanodegrees.data.DegreeContract;
+import com.udacity.nanodegrees.model.NanoDegree;
 
 import org.json.JSONArray;
 import org.json.JSONException;
