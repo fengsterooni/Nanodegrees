@@ -8,7 +8,7 @@ import android.support.v4.content.CursorLoader;
  * Helper for loading a list of articles or a single article.
  */
 public class DegreeLoader extends CursorLoader {
-    public static DegreeLoader newAllArticlesInstance(Context context) {
+    public static DegreeLoader newAllDegreesInstance(Context context) {
         return new DegreeLoader(context, DegreeContract.DegreeEntry.buildDegreeUri());
     }
 

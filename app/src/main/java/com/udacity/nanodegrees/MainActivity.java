@@ -1,7 +1,6 @@
 package com.udacity.nanodegrees;
 
 import com.udacity.nanodegrees.data.DegreeLoader;
-import com.udacity.nanodegrees.model.NanoDegree;
 import com.udacity.nanodegrees.service.UpdaterService;
 import com.udacity.nanodegrees.util.ImageLoaderHelper;
 import com.udacity.nanodegrees.util.NetworkUtils;
@@ -21,9 +20,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,9 +27,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    private ArrayList<NanoDegree> degrees;
-    private NanodegreeAdapter aDegrees;
 
     @Bind(R.id.lvDegrees)
     RecyclerView mRecyclerView;
@@ -45,23 +38,14 @@ public class MainActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
-        degrees = new ArrayList<>();
-        aDegrees = new NanodegreeAdapter(degrees);
-
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-
-        mRecyclerView.setLayoutManager(sglm);
-        mRecyclerView.setAdapter(aDegrees);
-
-        getSupportLoaderManager().initLoader(0, null, this);
-        if (NetworkUtils.isNetworkAvailable(this))
-            startService(new Intent(this, UpdaterService.class));
-        else
-            Snackbar.make(mRecyclerView, "Check your network connection", Snackbar.LENGTH_SHORT).show();
+        if (savedInstanceState == null) {
+            if (NetworkUtils.isNetworkAvailable(this))
+                startService(new Intent(this, UpdaterService.class));
+            else
+                Snackbar.make(mRecyclerView, "Check your network connection", Snackbar.LENGTH_SHORT).show();
+        }
     }
-
+    
     @Override
     protected void onStart() {
         super.onStart();
@@ -75,9 +59,10 @@ public class MainActivity extends AppCompatActivity
         unregisterReceiver(mDegreeReceiver);
     }
 
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return DegreeLoader.newAllArticlesInstance(this);
+        return DegreeLoader.newAllDegreesInstance(this);
     }
 
     @Override
@@ -148,9 +133,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                // updateRefreshingUI();
-                Toast.makeText(MainActivity.this, "Done", Toast.LENGTH_LONG).show();
-
+                getSupportLoaderManager().initLoader(0, null, MainActivity.this);
             }
         }
     };
