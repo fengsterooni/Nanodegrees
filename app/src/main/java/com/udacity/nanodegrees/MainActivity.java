@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        refreshUI();
+
         if (savedInstanceState == null) {
             if (NetworkUtils.isNetworkAvailable(this))
                 startService(new Intent(this, UpdaterService.class));
@@ -45,7 +47,11 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mRecyclerView, "Check your network connection", Snackbar.LENGTH_SHORT).show();
         }
     }
-    
+
+    private void refreshUI() {
+        getSupportLoaderManager().initLoader(0, null, MainActivity.this);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -133,7 +139,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
-                getSupportLoaderManager().initLoader(0, null, MainActivity.this);
+                refreshUI();
             }
         }
     };
